@@ -73,8 +73,8 @@ def scraper(url, log_name, store):
 
             if try_open and stock:
                 opened_time = time.time()
-                winsound.Beep(660, ALERT_DURATION_SEC * 1000)
                 requests.post(NOTIFY_URL, ALERT_MSG)
+                winsound.Beep(660, ALERT_DURATION_SEC * 1000)
                 try_open = False
             elif not try_open and (time.time() - opened_time) >= (COOLDOWN_DURATION_MIN * 60):
                 try_open = True
