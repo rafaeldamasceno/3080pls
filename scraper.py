@@ -39,11 +39,11 @@ def get_product_link(product, store):
     return link
 
 def is_in_stock(product, store):
-    result = False
-    if store == STORES.PCDIGA and re.search("'is_in_stock'.*?:.*?(\d+).*?,", str(product.find('script'))).group(1) != '0':
-        result = True
-    elif store == STORES.Globaldata and product.select_one('div.stock-available div span').decode_contents() != 'Esgotado':
-        result = True
+    result = True
+    if store == STORES.PCDIGA and re.search("'is_in_stock'.*?:.*?(\d+).*?,", str(product.find('script'))).group(1) == '0':
+        result = False
+    elif store == STORES.Globaldata and product.select_one('div.stock-available div span').decode_contents() == 'Esgotado':
+        result = False
     return result
 
 def scraper(url, log_name, store):
