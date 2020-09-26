@@ -7,8 +7,11 @@ import webbrowser
 import winsound
 
 URL_PCDIGA = 'https://www.pcdiga.com/catalogo-pcdiga/componentes/placas-graficas/graficas-nvidia/pg_grafica_filtro-geforce_rtx_3080?product_list_order=price'
+COOLDOWN_DURATION_MIN = 5
+ALERT_DURATION_SEC = 3
 
 next_time = time.time()
+opened_time = None
 
 opened = False
 check = True
@@ -33,8 +36,15 @@ with open('pcdiga.log', 'a', buffering=1) as log:
             print(f'{name}: {is_in_stock}', file=log, flush=True)
 
         if check and opened:
-            winsound.Beep(440, 2000)
+            opened_time = time.time()
+            winsound.Beep(440, ALERT_DURATION_SEC * 1000)
             check = False
+        elif not check and (time.time() - opened_time) >= (COOLDOWN_DURATION_MIN * 60):
+            opened = False
+            check = True
+        
+        if not check:
+            print('[ALERTA] GPU em stock!', file=log, flush=True)
 
         sleep_time = next_time - time.time()
         if sleep_time > 0:
