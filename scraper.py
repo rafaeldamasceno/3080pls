@@ -7,12 +7,29 @@ import time
 import webbrowser
 import winsound
 
+URL_PCDIGA = 'https://www.pcdiga.com/catalogo-pcdiga/componentes/placas-graficas/graficas-nvidia/pg_grafica_filtro-geforce_rtx_3080?product_list_order=price'
+URL_GLOBALDATA = 'https://www.globaldata.pt/componentes/placas-graficas/cat-nvidia/geforce_rtx_3080'
+URL_NOVOATALHO = 'https://www.novoatalho.pt/actions/products/GetProducts.ashx'
+
 NOTIFY_URL = 'https://notify.run/zRunWfXWbBRYwROz'
+
 ALERT_MSG = '[ALERT] GPU in stock!'
+
 COOLDOWN_DURATION_MIN = 5
 ALERT_DURATION_SEC = 3
 
-STORES = Enum('STORES', 'PCDIGA Globaldata')
+STORES = Enum('STORES', 'PCDIGA Globaldata NovoAtalho')
+
+def get_page(store):
+    page = None
+    if store == STORES.PCDIGA:
+        page = requests.get(URL_PCDIGA)
+    elif store == STORES.Globaldata:
+        page = requests.get(URL_GLOBALDATA)
+    elif store == STORES.NovoAtalho:
+        page = requests.post(URL_NOVOATALHO, json={"id":11205,"countpage":1,"brands":[],"min":-1,"max":-1,"stockFilters":[],"attributeFilters":[{"name":"Modelo","group":"","value":"GeForce® RTX 3080"}],"type":"grid","sortby":0,"itensList":20,"reset":True,"categories":[],"campaigns":[],"isoutlet":[],"ishighlight":[],"ispresale":[],"hasoffer":[]})
+    return page
+
 
 def get_products(soup, store):
     products = None
@@ -20,6 +37,8 @@ def get_products(soup, store):
         products = soup.find_all(class_='product-card')
     elif store == STORES.Globaldata:
         products = soup.select('li.item.product')
+    elif store == STORES.NovoAtalho:
+        products = soup.find_all('div', class_='product')
     return products
 
 def get_name(product, store):
@@ -28,6 +47,8 @@ def get_name(product, store):
         name = product.find('div', class_='product-card--title')['title']
     elif store == STORES.Globaldata:
         name = product.select_one('div.product-item-name a strong').decode_contents()
+    elif store == STORES.NovoAtalho:
+        name = product.select_one('h2 a')['title']
     return name
 
 def get_product_link(product, store):
@@ -36,17 +57,19 @@ def get_product_link(product, store):
         link = product.find('a')['href']
     elif store == STORES.Globaldata:
         link = product.select_one('div.product-item-name a')['href']
+    elif store == STORES.NovoAtalho:
+        link = product.select_one('h2 a')['href']
     return link
 
 def is_in_stock(product, store):
     result = True
-    if store == STORES.PCDIGA and re.search("'is_in_stock'.*?:.*?(\d+).*?,", str(product.find('script'))).group(1) == '0':
-        result = False
-    elif store == STORES.Globaldata and product.select_one('div.stock-available div span').decode_contents() == 'Esgotado':
+    if (store == STORES.PCDIGA and re.search("'is_in_stock'.*?:.*?(\d+).*?,", str(product.find('script'))).group(1) == '0') \
+    or (store == STORES.Globaldata and product.select_one('div.stock-available div span').decode_contents().strip() == 'Esgotado') \
+    or (store == STORES.NovoAtalho and product.select_one('span.stock b a').decode_contents().strip() == 'Indisponível'):
         result = False
     return result
 
-def scraper(url, log_name, store):
+def scraper(store, log_name):
     next_time = time.time()
     opened_time = None
 
@@ -59,10 +82,10 @@ def scraper(url, log_name, store):
             next_time += 10
             print(str(datetime.now()), file=log, flush=True)
 
-            page = requests.get(url)
+            page = get_page(store)
 
             soup = BeautifulSoup(page.content, 'html.parser')
-
+            
             for product in get_products(soup, store):
                 name = get_name(product, store)
                 if is_in_stock(product, store):
