@@ -7,13 +7,13 @@ import time
 import webbrowser
 import winsound
 
-URL_PCDIGA = 'https://www.pcdiga.com/catalogo-pcdiga/componentes/placas-graficas/graficas-nvidia/pg_grafica_filtro-geforce_rtx_3080?product_list_order=price'
-URL_GLOBALDATA = 'https://www.globaldata.pt/componentes/placas-graficas/cat-nvidia/geforce_rtx_3080'
+URL_PCDIGA = 'https://www.pcdiga.com/catalogo-pcdiga/componentes/processadores/processadores-amd/cpu_arquitetura-zen_3'
+URL_GLOBALDATA = 'https://www.globaldata.pt/componentes/processadores/amd-zen_3'
 URL_NOVOATALHO = 'https://www.novoatalho.pt/actions/products/GetProducts.ashx'
 
-NOTIFY_URL = 'https://notify.run/zRunWfXWbBRYwROz'
+NOTIFY_URL = 'https://notify.run/CtjOqFQNWmukdVWF'
 
-ALERT_MSG = '[ALERT] GPU in stock!'
+ALERT_MSG = f'[ALERT] CPU in stock!'
 
 COOLDOWN_DURATION_MIN = 5
 ALERT_DURATION_SEC = 3
@@ -27,7 +27,7 @@ def get_page(store):
     elif store == STORES.Globaldata:
         page = requests.get(URL_GLOBALDATA)
     elif store == STORES.NovoAtalho:
-        page = requests.post(URL_NOVOATALHO, json={"id":11205,"countpage":1,"brands":[],"min":-1,"max":-1,"stockFilters":[],"attributeFilters":[{"name":"Modelo","group":"","value":"GeForce® RTX 3080"}],"type":"grid","sortby":0,"itensList":20,"reset":True,"categories":[],"campaigns":[],"isoutlet":[],"ishighlight":[],"ispresale":[],"hasoffer":[]})
+        page = requests.post(URL_NOVOATALHO, json={"id":11209,"countpage":1,"brands":[],"min":-1,"max":-1,"stockFilters":[],"attributeFilters":[{"name":"Arquitetura do CPU","group":"","value":"Zen 3"}],"type":"grid","sortby":0,"itensList":20,"reset":True,"categories":[],"campaigns":[],"isoutlet":[],"ishighlight":[],"ispresale":[],"hasoffer":[]})
     return page
 
 
