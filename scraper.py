@@ -15,6 +15,8 @@ NOTIFY_URL = 'https://notify.run/CtjOqFQNWmukdVWF'
 
 ALERT_MSG = f'[ALERT] CPU in stock!'
 
+FREQUENCY_SEC = 10
+
 COOLDOWN_DURATION_MIN = 5
 ALERT_DURATION_SEC = 3
 
@@ -79,7 +81,7 @@ def scraper(store, log_name):
     with open(log_name, 'a', buffering=1) as log:
 
         while True:
-            next_time += 10
+            next_time += FREQUENCY_SEC
             print(str(datetime.now()), file=log, flush=True)
 
             page = get_page(store)
