@@ -1,13 +1,13 @@
 from scraper import scraper, STORES
 from threading import Thread
 
-thread_pcdiga = Thread(target=scraper, args=(STORES.PCDIGA, 'pcdiga.log'), daemon=True)
-thread_globaldata = Thread(target=scraper, args=(STORES.Globaldata, 'globaldata.log'), daemon=True)
-thread_novoatalho = Thread(target=scraper, args=(STORES.NovoAtalho, 'novoatalho.log'), daemon=True)
+thread_worten = Thread(target=scraper, args=(STORES.Worten, 'worten.log'), daemon=True)
+thread_fnac = Thread(target=scraper, args=(STORES.FNAC, 'fnac.log'), daemon=True)
+thread_mediamarkt = Thread(target=scraper, args=(STORES.MediaMarkt, 'mediamarkt.log'), daemon=True)
 
-thread_pcdiga.start()
-thread_globaldata.start()
-thread_novoatalho.start()
+thread_worten.start()
+thread_fnac.start()
+thread_mediamarkt.start()
 
 while input('Running. Type "q" to quit. ') != 'q':
     pass
