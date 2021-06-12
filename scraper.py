@@ -9,7 +9,7 @@ import webbrowser
 import cloudscraper
 
 URLS_WORTEN = ['https://www.worten.pt/gaming/playstation/consolas/ps5/consola-ps5-825gb-7196053']
-URLS_FNAC = ['https://www.fnac.pt/Bundle-PS5-Standard-Demon-s-Souls-DualSense-Consola-Consola/a9024729', 'https://www.fnac.pt/Bundle-PS5-Digital-Comando-Dual-Sense-Consola-Consola/a8492493']
+URLS_FNAC = ['https://www.fnac.pt/Bundle-PS5-Standard-Demon-s-Souls-DualSense-Consola-Consola/a9024729']
 URLS_MEDIAMARKT = ['https://mediamarkt.pt/products/consola-playstation-5?variant=32836255154251', 'https://mediamarkt.pt/products/conjunto-playstation-5-jogo-ps5-call-of-duty-cold-war?variant=39392380059723', 'https://mediamarkt.pt/products/conjunto-playstation-5-jogo-ps5-ratchet-clank-uma-dimensao-a-parte?variant=39392389922891', 'https://mediamarkt.pt/products/conjunto-playstation-5-jogo-ps5-call-of-duty-ratched-clank']
 
 NOTIFY_URL = 'https://notify.run/9UBMUDRIjdbcWZQM'
@@ -71,7 +71,8 @@ def scraper(store, log_name):
                 name = get_name(product, store)
                 if is_in_stock(product, store):
                     if try_open:
-                        webbrowser.open(product_page.url)
+                        # webbrowser.open(product_page.url)
+                        pass
                     stock = True
                 print(f'{name}: {is_in_stock(product, store)}', file=log, flush=True)
 
