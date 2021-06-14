@@ -16,7 +16,7 @@ NOTIFY_URL = 'https://notify.run/9UBMUDRIjdbcWZQM'
 
 ALERT_MSG = '[ALERT] {name} in stock in {store}!'
 
-FREQUENCY_SEC = 60
+FREQUENCY_SEC = 10
 
 COOLDOWN_DURATION_MIN = 5
 ALERT_DURATION_SEC = 3
